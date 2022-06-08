@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="main/layout/basic">
+	<th:block layout:fragment="title">
+		<title>This page is a main page</title>
+	</th:block>
+
+
+	<th:block layout:fragment="content">
+		메인페이지
+	</th:block>
+	
+	<th:block layout:fragment="script">
+		<script th:inline="javascript">
+			/*<![CDATA[*/
+
+			function movePage(uri, queryString) {
+				location.href = uri + queryString;
+			}
+
+
+			
+			/*]]>*/
+		</script>
+	</th:block>
+</html>
