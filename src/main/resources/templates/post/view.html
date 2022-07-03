@@ -6,7 +6,7 @@
 
 	<th:block layout:fragment="content">
 		<div class="card-content">
-			<form class="form-horizontal form-view" th:object="${board}">
+			<form class="form-horizontal form-view" th:object="${post}">
 				<div class="form-group">
 					<label for="inp-type-1" class="col-sm-2 control-label">제목</label>
 					<div class="col-sm-10">
@@ -46,7 +46,7 @@
 					<label for="inp-type-4" class="col-sm-2 control-label">File</label>
 					<div class="col-sm-10">
 						<div class="form-control file_list">
-							<a th:each="row, status : ${fileList}" th:href="@{/board/download.do( idx=${row.idx} )}">
+							<a th:each="row, status : ${fileList}" th:href="@{/post/download.do( idx=${row.idx} )}">
 								<i class="fa fa-file-o" aria-hidden="true"></i>
 								[[ ${row.originalName} ]]
 							</a>
@@ -57,9 +57,9 @@
 			
 			<!-- 트랜잭션 처리 후 페이징 정보 저장하도록 변경 -->
 			<div class="btn_wrap text-center" th:object="${params}">
-				<a th:href="|@{/board/list.do}*{makeQueryString(currentPageNo)}|" class="btn btn-default waves-effect waves-light">뒤로가기</a>
-				<a th:href="|@{/board/write.do}*{makeQueryString(currentPageNo)}&idx=${board.idx}|" class="btn btn-primary waves-effect waves-light">수정하기</a>
-				<button type="button" class="btn btn-danger waves-effect waves-light" th:onclick="deleteBoard([[ ${board.idx} ]], [[ *{makeQueryString(currentPageNo)} ]])">삭제하기</button>
+				<a th:href="|@{/post/list.do}*{makeQueryString(currentPageNo)}|" class="btn btn-default waves-effect waves-light">뒤로가기</a>
+				<a th:href="|@{/post/write.do}*{makeQueryString(currentPageNo)}&idx=${post.idx}|" class="btn btn-primary waves-effect waves-light">수정하기</a>
+				<button type="button" class="btn btn-danger waves-effect waves-light" th:onclick="deleteBoard([[ ${post.idx} ]], [[ *{makeQueryString(currentPageNo)} ]])">삭제하기</button>
 			</div>
 		</div>
 		<!-- /.card-content -->
@@ -109,7 +109,7 @@
 					<div class="input-group margin-bottom-20">
 						<input type="text" id="content" class="form-control" placeholder="">
 						<div class="input-group-btn">
-							<button type="button" class="btn waves-effect waves-light" th:onclick="insertComment([[ ${board.idx} ]])">
+							<button type="button" class="btn waves-effect waves-light" th:onclick="insertComment([[ ${post.idx} ]])">
 								<i class="fa fa-commenting" aria-hidden="true"></i>
 							</button>
 						</div>
@@ -146,7 +146,7 @@
 			
 			
 			//댓글 등록
-			function insertComment(boardIdx) {
+			function insertComment(postIdx) {
 
 				var content = document.getElementById("content");
 				if (isEmpty(content.value) == true) {
@@ -157,7 +157,7 @@
 
 				var uri = /*[[ @{/comments} ]]*/null;
 				var headers = {"Content-Type": "application/json", "X-HTTP-Method-Override": "POST"};
-				var params = {"boardIdx": boardIdx, "content": content.value, "writer": "관리자"};
+				var params = {"postIdx": postIdx, "content": content.value, "writer": "관리자"};
 
 				$.ajax({
 					url: uri,
@@ -218,7 +218,7 @@
 			//댓글 리스트 가져오기
 			function printCommentList() {
 		
-				var uri = /*[[ @{/comments/} + ${board.idx} ]]*/null;
+				var uri = /*[[ @{/comments/} + ${post.idx} ]]*/null;
 		
 				$.get(uri, function(response) {
 					if (isEmpty(response) == false) {
@@ -251,7 +251,7 @@
 			function deleteBoard(idx, queryString) {
 
 				if (confirm(idx + "번 게시글을 삭제할까요?")) {
-					var uri = /*[[ @{/board/delete.do} ]]*/null;
+					var uri = /*[[ @{/post/delete.do} ]]*/null;
 					var html = "";
 
 					html += '<form name="dataForm" action="'+uri+'" method="post">';

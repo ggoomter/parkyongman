@@ -4,7 +4,7 @@
 
 	<sql id="attachColumns">
 		  idx
-		, board_idx
+		, post_idx
 		, original_name
 		, save_name
 		, size
@@ -20,7 +20,7 @@
 		<foreach collection="list" item="item" separator=",">
 		(
 			  #{item.idx}
-			, #{item.boardIdx}
+			, #{item.postIdx}
 			, #{item.originalName}
 			, #{item.saveName}
 			, #{item.size}
@@ -48,7 +48,7 @@
 			  delete_yn = 'Y'
 			, delete_time = NOW()
 		WHERE
-			board_idx = #{boardIdx}
+			post_idx = #{postIdx}
 	</update>
 
 	<select id="selectAttachList" parameterType="long" resultType="AttachDTO">
@@ -59,7 +59,7 @@
 		WHERE
 			delete_yn = 'N'
 		AND
-			board_idx = #{boardIdx}
+			post_idx = #{postIdx}
 	</select>
 
 	<select id="selectAttachTotalCount" parameterType="long" resultType="int">
@@ -70,7 +70,7 @@
 		WHERE
 			delete_yn = 'N'
 		AND
-			board_idx = #{boardIdx}
+			post_idx = #{postIdx}
 	</select>
 
 	<update id="undeleteAttach" parameterType="list">

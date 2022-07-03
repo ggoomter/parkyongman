@@ -6,9 +6,10 @@
 
 	<th:block layout:fragment="content">
 		<div class="card-content">
-			<form class="form-horizontal" th:action="@{/board/register.do}" th:object="${board}" method="post" enctype="multipart/form-data" onsubmit="return registerBoard(this)" >
+			<form class="form-horizontal" th:action="@{/post/register.do}" th:object="${post}" method="post" enctype="multipart/form-data" onsubmit="return registerBoard(this)" >
 				<!--/* update의 경우 서버로 전달할 게시글 번호 (PK) */-->
 				<input type="hidden" th:if="*{idx != null and idx > 0}" th:field="*{idx}" />
+				
 				<!--/* 파일이 변경된 경우, 해당 파라미터를 이용하여 파일 삭제 및 재등록 처리 */-->
 				<input type="hidden" th:field="*{changeYn}" value="N" />
 
@@ -88,7 +89,7 @@
 				</div>
 				
 				<div id="btnDiv" class="btn_wrap text-center"  th:object="${params}">
-					<a th:href="|@{/board/list.do}*{makeQueryString(currentPageNo)}|" class="btn btn-default waves-effect waves-light">뒤로가기</a>
+					<a th:href="|@{/post/list.do}*{makeQueryString(currentPageNo)}|" class="btn btn-default waves-effect waves-light">뒤로가기</a>
 					<button type="submit" class="btn btn-primary waves-effect waves-light">저장하기</button>
 				</div>
 			</form>
@@ -115,7 +116,7 @@
 					return false;
 				}
 				
-				var idx = /*[[ ${board.idx} ]]*/null;
+				var idx = /*[[ ${post.idx} ]]*/null;
 				if (isEmpty(idx) == false) {
 					var queryString = /*[[ ${params.makeQueryString(params.currentPageNo)} ]]*/null;
 

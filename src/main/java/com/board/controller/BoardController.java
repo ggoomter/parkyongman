@@ -76,8 +76,8 @@ public class BoardController extends UiUtils{
 	//@ModelAttribute를 이용하면 파라미터로 전달받은 객체를 자동으로 뷰까지 전달할 수 있다.
 	@GetMapping(value = "/post/list.do")
 	public String openPostList(@ModelAttribute("params") PostDTO params, Model model) {
-		List<PostDTO> boardList = boardService.getPostList(params);
-		model.addAttribute("boardList", boardList);
+		List<PostDTO> postList = boardService.getPostList(params);
+		model.addAttribute("postList", postList);
 
 		return "post/list";
 	}

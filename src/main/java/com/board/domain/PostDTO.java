@@ -30,7 +30,7 @@ public class PostDTO extends CommonDTO{
 
 	/** 비밀 여부 */
 	private String secretYn;
-	
+
 	/** 파일 변경 여부 */
 	private String changeYn;
 
