@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.util.CollectionUtils;
 
-import com.board.domain.BoardDTO;
-import com.board.mapper.BoardMapper;
+import com.board.domain.PostDTO;
+import com.board.mapper.PostMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -17,18 +17,21 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 public class MapperTests {
 
 	@Autowired
-	private BoardMapper boardMapper;
+	private PostMapper postMapper;
 	
 	@Test
 	public void testOfInsert() {
 		//1. 데이터 준비
-		BoardDTO params = new BoardDTO();
-		params.setTitle("2번 게시글 제목");
-		params.setContent("2번 게시글 내용");
-		params.setWriter("테스터");
+		PostDTO params = new PostDTO();
+		params.setIdx((long)1);
+		params.setBoardIdx(1);	//게시판선택
+		params.setTitle("1번 게시글 제목");
+		params.setContent("1번 게시글 내용");
+		params.setNoticeYn("N");
+		params.setWriter("ggoomter");
 		
 		//2. 테스트
-		int result = boardMapper.insertBoard(params);
+		int result = postMapper.insertPost(params);
 		System.out.println("결과는 " + result + "입니다.");
 		
 		//3. 결과값 활용
@@ -37,13 +40,13 @@ public class MapperTests {
 	
 	@Test
 	public void testOfSelectDetail() {
-		BoardDTO board = boardMapper.selectBoardDetail((long) 2);
+		PostDTO post = postMapper.selectPostDetail((long) 2);
 		try {
-			//String boardJson = new ObjectMapper().writeValueAsString(board);
-            String boardJson = new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(board);
+			//String postJson = new ObjectMapper().writeValueAsString(post);
+            String postJson = new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(post);
 
 			System.out.println("=========================");
-			System.out.println(boardJson);
+			System.out.println(postJson);
 			System.out.println("=========================");
 
 		} catch (JsonProcessingException e) {
@@ -53,21 +56,21 @@ public class MapperTests {
 	
 	@Test
 	public void testOfUpdate() {
-		BoardDTO params = new BoardDTO();
+		PostDTO params = new PostDTO();
 		params.setTitle("1번 게시글 제목을 수정합니다.");
 		params.setContent("1번 게시글 내용을 수정합니다.");
 		params.setWriter("홍길동");
 		params.setIdx((long) 1);
 
-		int result = boardMapper.updateBoard(params);
+		int result = postMapper.updatePost(params);
 		if (result == 1) {
-			BoardDTO board = boardMapper.selectBoardDetail((long) 1);
+			PostDTO post = postMapper.selectPostDetail((long) 1);
 			try {
-				//String boardJson = new ObjectMapper().writeValueAsString(board);
-                String boardJson = new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(board);
+				//String postJson = new ObjectMapper().writeValueAsString(post);
+                String postJson = new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(post);
 
 				System.out.println("=========================");
-				System.out.println(boardJson);
+				System.out.println(postJson);
 				System.out.println("=========================");
 
 			} catch (JsonProcessingException e) {
@@ -79,15 +82,15 @@ public class MapperTests {
 	
 	@Test
 	public void testOfDelete() {
-		int result = boardMapper.deleteBoard((long) 2);
+		int result = postMapper.deletePost((long) 2);
 		if (result == 1) {
-			BoardDTO board = boardMapper.selectBoardDetail((long) 2);
+			PostDTO post = postMapper.selectPostDetail((long) 2);
 			try {
-				//String boardJson = new ObjectMapper().writeValueAsString(board);
-                String boardJson = new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(board);
+				//String postJson = new ObjectMapper().writeValueAsString(post);
+                String postJson = new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(post);
 
 				System.out.println("=========================");
-				System.out.println(boardJson);
+				System.out.println(postJson);
 				System.out.println("=========================");
 
 			} catch (JsonProcessingException e) {
@@ -99,26 +102,26 @@ public class MapperTests {
 	@Test
 	public void testMultipleInsert() {
 		for (int i = 2; i <= 50; i++) {
-			BoardDTO params = new BoardDTO();
+			PostDTO params = new PostDTO();
 			params.setTitle(i + "번 게시글 제목");
 			params.setContent(i + "번 게시글 내용");
 			params.setWriter(i + "번 게시글 작성자");
-			boardMapper.insertBoard(params);
+			postMapper.insertPost(params);
 		}
 	}
 	
 	
 	@Test
 	public void testSelectList() {
-//		int boardTotalCount = boardMapper.selectBoardTotalCount();
-//		if (boardTotalCount > 0) {
-//			List<BoardDTO> boardList = boardMapper.selectBoardList();
-//			if (CollectionUtils.isEmpty(boardList) == false) {
-//				for (BoardDTO board : boardList) {
+//		int postTotalCount = postMapper.selectPostTotalCount();
+//		if (postTotalCount > 0) {
+//			List<PostDTO> postList = postMapper.selectPostList();
+//			if (CollectionUtils.isEmpty(postList) == false) {
+//				for (PostDTO post : postList) {
 //					System.out.println("=========================");
-//					System.out.println(board.getTitle());
-//					System.out.println(board.getContent());
-//					System.out.println(board.getWriter());
+//					System.out.println(post.getTitle());
+//					System.out.println(post.getContent());
+//					System.out.println(post.getWriter());
 //					System.out.println("=========================");
 //				}
 //			}

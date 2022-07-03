@@ -5,10 +5,13 @@ import java.util.List;
 import lombok.Data;
 
 @Data
-public class BoardDTO extends CommonDTO{
+public class PostDTO extends CommonDTO{
 
 	/** 번호 (PK) */
 	private Long idx;
+	
+	/** 게시판카테고리 */
+	private int boardIdx;
 
 	/** 제목 */
 	private String title;

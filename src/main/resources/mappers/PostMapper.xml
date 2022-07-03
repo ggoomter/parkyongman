@@ -1,52 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.board.mapper.BoardMapper">
+<mapper namespace="com.board.mapper.PostMapper">
 
-<sql id="boardColumns">
+<sql id="postColumns">
 		  idx
+		, board_idx
 		, title
 		, content
-		, writer
 		, view_cnt
 		, notice_yn
 		, secret_yn
 		, delete_yn
+		, writer
 		, insert_time
 		, update_time
 		, delete_time
 	</sql>
 
-	<insert id="insertBoard" parameterType="BoardDTO" useGeneratedKeys="true" keyProperty="idx">
-		INSERT INTO tb_board (
-			<include refid="boardColumns" />
+	<insert id="insertPost" parameterType="PostDTO" useGeneratedKeys="true" keyProperty="idx">
+		INSERT INTO tb_post (
+			<include refid="postColumns" />
 		) VALUES (
 			  #{idx}
+			, #{boardIdx}
 			, #{title}
 			, #{content}
-			, #{writer}
 			, 0
 			, IFNULL(#{noticeYn}, 'N')
 			, IFNULL(#{secretYn}, 'N')
 			, 'N'
+			, #{writer}
 			, NOW()
-			, NULL
+			, NOW()
 			, NULL
 		)
 	</insert>
 
-	<select id="selectBoardDetail" parameterType="long" resultType="BoardDTO">
+	<select id="selectPostDetail" parameterType="long" resultType="PostDTO">
 		SELECT
-			<include refid="boardColumns" />
+			<include refid="postColumns" />
 		FROM
-			tb_board
+			tb_post
 		WHERE
 			delete_yn = 'N'
 		AND
 			idx = #{idx}
 	</select>
 
-	<update id="updateBoard" parameterType="BoardDTO">
-		UPDATE tb_board
+	<update id="updatePost" parameterType="PostDTO">
+		UPDATE tb_post
 		SET
 			  update_time = NOW()
 			, title = #{title}
@@ -58,8 +60,8 @@
 			idx = #{idx}
 	</update>
 
-	<update id="deleteBoard" parameterType="long">
-		UPDATE tb_board
+	<update id="deletePost" parameterType="long">
+		UPDATE tb_post
 		SET
 			  delete_yn = 'Y'
 			, delete_time = NOW()
@@ -67,11 +69,11 @@
 			idx = #{idx}
 	</update>
 
-	<select id="selectBoardList" parameterType="BoardDTO" resultType="BoardDTO">
+	<select id="selectPostList" parameterType="PostDTO" resultType="PostDTO">
 		SELECT
-			<include refid="boardColumns" />
+			<include refid="postColumns" />
 		FROM
-			tb_board
+			tb_post
 		WHERE
 			delete_yn = 'N'
 			<include refid="CommonMapper.search" />
@@ -82,11 +84,11 @@
 		<include refid="CommonMapper.paging" />
 	</select>
 
-	<select id="selectBoardTotalCount" parameterType="BoardDTO" resultType="int">
+	<select id="selectPostTotalCount" parameterType="PostDTO" resultType="int">
 		SELECT
 			COUNT(*)
 		FROM
-			tb_board
+			tb_post
 		WHERE
 			delete_yn = 'N'
 			<include refid="CommonMapper.search" />

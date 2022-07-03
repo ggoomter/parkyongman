@@ -9,7 +9,7 @@ public class CommentDTO extends CommonDTO {
 
 	private Long idx;
 
-	private Long boardIdx;
+	private Long postIdx;
 
 	private String content;
 

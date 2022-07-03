@@ -23,103 +23,107 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.board.constant.Method;
 import com.board.domain.AttachDTO;
-import com.board.domain.BoardDTO;
-import com.board.service.BoardService;
+import com.board.domain.PostDTO;
+import com.board.service.PostService;
 import com.board.util.UiUtils;
+/* 보드. 게시판
+ * 포스트. 게시글.
+ * 둘다 처리
+ */
 
 @Controller
 public class BoardController extends UiUtils{
 	
 	@Autowired
-	private BoardService boardService;
+	private PostService boardService;
 	
-	@GetMapping(value = "/board/write.do")
-	public String openBoardWrite(@ModelAttribute("params") BoardDTO params, @RequestParam(value = "idx", required = false) Long idx, Model model) {
+	@GetMapping(value = "/post/write.do")
+	public String openPostWrite(@ModelAttribute("params") PostDTO params, @RequestParam(value = "idx", required = false) Long idx, Model model) {
 		if (idx == null) {
-			model.addAttribute("board", new BoardDTO());
+			model.addAttribute("post", new PostDTO());
 		} else {
-			BoardDTO board = boardService.getBoardDetail(idx);
-			if (board == null || "Y".equals(board.getDeleteYn())) {
-				return showMessageWithRedirect("없는 게시글이거나 이미 삭제된 게시글입니다.", "/board/list.do", Method.GET, null, model);
+			PostDTO post = boardService.getPostDetail(idx);
+			if (post == null || "Y".equals(post.getDeleteYn())) {
+				return showMessageWithRedirect("없는 게시글이거나 이미 삭제된 게시글입니다.", "/post/list.do", Method.GET, null, model);
 			}
-			model.addAttribute("board", board);
+			model.addAttribute("post", post);
 			
 			List<AttachDTO> fileList = boardService.getAttachFileList(idx);
 			model.addAttribute("fileList", fileList);
 		}
-		return "board/write";	//resources/templates하위의 View경로리턴 뒤에는 .html붙음
-		//수정과 삭제 둘다 board/write가 처리.
+		return "post/write";	//resources/templates하위의 View경로리턴 뒤에는 .html붙음
+		//수정과 삭제 둘다 post/write가 처리.
 	}
 	
-	@PostMapping(value = "/board/register.do")
-	public String registerBoard(@ModelAttribute("params") final BoardDTO params,  final MultipartFile[] files, Model model) {
+	@PostMapping(value = "/post/register.do")
+	public String registerPost(@ModelAttribute("params") final PostDTO params,  final MultipartFile[] files, Model model) {
 		Map<String, Object> pagingParams = getPagingParams(params);
 		try {
-			boolean isRegistered = boardService.registerBoard(params, files);
+			boolean isRegistered = boardService.registerPost(params, files);
 			if (isRegistered == false) {
-				return showMessageWithRedirect("게시글 등록(수정)에 실패하였습니다.", "/board/list.do", Method.GET, pagingParams, model);
+				return showMessageWithRedirect("게시글 등록(수정)에 실패하였습니다.", "/post/list.do", Method.GET, pagingParams, model);
 			}
 		} catch (DataAccessException e) {
-			return showMessageWithRedirect("데이터베이스 처리 과정에 문제가 발생하였습니다.", "/board/list.do", Method.GET, pagingParams, model);
+			return showMessageWithRedirect("데이터베이스 처리 과정에 문제가 발생하였습니다.", "/post/list.do", Method.GET, pagingParams, model);
 
 		} catch (Exception e) {
-			return showMessageWithRedirect("시스템에 문제가 발생하였습니다.", "/board/list.do", Method.GET, pagingParams, model);
+			return showMessageWithRedirect("시스템에 문제가 발생하였습니다.", "/post/list.do", Method.GET, pagingParams, model);
 		}
 
-		return showMessageWithRedirect("게시글 등록(수정)이 완료되었습니다.", "/board/list.do", Method.GET, pagingParams, model);
+		return showMessageWithRedirect("게시글 등록(수정)이 완료되었습니다.", "/post/list.do", Method.GET, pagingParams, model);
 	}
 	
 	//@ModelAttribute를 이용하면 파라미터로 전달받은 객체를 자동으로 뷰까지 전달할 수 있다.
-	@GetMapping(value = "/board/list.do")
-	public String openBoardList(@ModelAttribute("params") BoardDTO params, Model model) {
-		List<BoardDTO> boardList = boardService.getBoardList(params);
+	@GetMapping(value = "/post/list.do")
+	public String openPostList(@ModelAttribute("params") PostDTO params, Model model) {
+		List<PostDTO> boardList = boardService.getPostList(params);
 		model.addAttribute("boardList", boardList);
 
-		return "board/list";
+		return "post/list";
 	}
 	
-	@GetMapping(value = "/board/view.do")
-	public String openBoardDetail(@ModelAttribute("params") BoardDTO params, @RequestParam(value = "idx", required = false) Long idx, Model model) {
+	@GetMapping(value = "/post/view.do")
+	public String openPostDetail(@ModelAttribute("params") PostDTO params, @RequestParam(value = "idx", required = false) Long idx, Model model) {
 		if (idx == null) {
-			return showMessageWithRedirect("올바르지 않은 접근입니다.", "/board/list.do", Method.GET, null, model);
+			return showMessageWithRedirect("올바르지 않은 접근입니다.", "/post/list.do", Method.GET, null, model);
 		}
 
-		BoardDTO board = boardService.getBoardDetail(idx);
-		if (board == null || "Y".equals(board.getDeleteYn())) {
-			return showMessageWithRedirect("없는 게시글이거나 이미 삭제된 게시글입니다.", "/board/list.do", Method.GET, null, model);
+		PostDTO post = boardService.getPostDetail(idx);
+		if (post == null || "Y".equals(post.getDeleteYn())) {
+			return showMessageWithRedirect("없는 게시글이거나 이미 삭제된 게시글입니다.", "/post/list.do", Method.GET, null, model);
 		}
-		model.addAttribute("board", board);
+		model.addAttribute("post", post);
 
 		List<AttachDTO> fileList = boardService.getAttachFileList(idx); // 상세보기에서 파일리스트
 		model.addAttribute("fileList", fileList); //뷰로 전달
 
-		return "board/view";
+		return "post/view";
 	}
 	
-	@PostMapping(value = "/board/delete.do")
-	public String deleteBoard(@ModelAttribute("params") BoardDTO params, @RequestParam(value = "idx", required = false) Long idx, Model model) {
+	@PostMapping(value = "/post/delete.do")
+	public String deletePost(@ModelAttribute("params") PostDTO params, @RequestParam(value = "idx", required = false) Long idx, Model model) {
 		if (idx == null) {
-			return showMessageWithRedirect("올바르지 않은 접근입니다.", "/board/list.do", Method.GET, null, model);
+			return showMessageWithRedirect("올바르지 않은 접근입니다.", "/post/list.do", Method.GET, null, model);
 		}
 
 		Map<String, Object> pagingParams = getPagingParams(params);
 
 		try {
-			boolean isDeleted = boardService.deleteBoard(idx);
+			boolean isDeleted = boardService.deletePost(idx);
 			if (isDeleted == false) {
-				return showMessageWithRedirect("게시글 삭제에 실패하였습니다.", "/board/list.do", Method.GET, pagingParams, model);
+				return showMessageWithRedirect("게시글 삭제에 실패하였습니다.", "/post/list.do", Method.GET, pagingParams, model);
 			}
 		} catch (DataAccessException e) {
-			return showMessageWithRedirect("데이터베이스 처리 과정에 문제가 발생하였습니다.", "/board/list.do", Method.GET, pagingParams, model);
+			return showMessageWithRedirect("데이터베이스 처리 과정에 문제가 발생하였습니다.", "/post/list.do", Method.GET, pagingParams, model);
 
 		} catch (Exception e) {
-			return showMessageWithRedirect("시스템에 문제가 발생하였습니다.", "/board/list.do", Method.GET, pagingParams, model);
+			return showMessageWithRedirect("시스템에 문제가 발생하였습니다.", "/post/list.do", Method.GET, pagingParams, model);
 		}
 
-		return showMessageWithRedirect("게시글 삭제가 완료되었습니다.", "/board/list.do", Method.GET, pagingParams, model);
+		return showMessageWithRedirect("게시글 삭제가 완료되었습니다.", "/post/list.do", Method.GET, pagingParams, model);
 	}
 	
-	@GetMapping("/board/download.do")
+	@GetMapping("/post/download.do")
 	public void downloadAttachFile(@RequestParam(value = "idx", required = false) final Long idx, Model model, HttpServletResponse response) {
 
 		if (idx == null) throw new RuntimeException("올바르지 않은 접근입니다.");

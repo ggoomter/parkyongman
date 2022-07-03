@@ -8,7 +8,7 @@ public class AttachDTO extends CommonDTO{
 	private Long idx;
 
 	/** 게시글 번호 (FK) */
-	private Long boardIdx;
+	private Long postIdx;
 
 	/** 원본 파일명 */
 	private String originalName;

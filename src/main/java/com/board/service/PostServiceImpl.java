@@ -9,17 +9,17 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.board.domain.AttachDTO;
-import com.board.domain.BoardDTO;
+import com.board.domain.PostDTO;
 import com.board.mapper.AttachMapper;
-import com.board.mapper.BoardMapper;
+import com.board.mapper.PostMapper;
 import com.board.paging.PaginationInfo;
 import com.board.util.FileUtils;
 
 @Service
-public class BoardServiceImpl implements BoardService{
+public class PostServiceImpl implements PostService{
 
 	@Autowired
-	private BoardMapper boardMapper;
+	private PostMapper boardMapper;
 	
 	@Autowired
 	private AttachMapper attachMapper;
@@ -29,14 +29,14 @@ public class BoardServiceImpl implements BoardService{
 	
 	//글번호 있으면 수정, 없으면 등록
 	@Override
-	public boolean registerBoard(BoardDTO params) {
+	public boolean registerPost(PostDTO params) {
 		int queryResult = 0;
 
 		if (params.getIdx() == null) {	//idx가 없으면 입력
-			queryResult = boardMapper.insertBoard(params);
+			queryResult = boardMapper.insertPost(params);
 			
 		} else {		//idx가 있으면 수정
-			queryResult = boardMapper.updateBoard(params);
+			queryResult = boardMapper.updatePost(params);
 			
 			// 수정화면에서 찾아보기로 파일을 수정하면 기존의 파일은 삭제처리해야된다.
 			if ("Y".equals(params.getChangeYn())) {	// 수정할때 화면에서 파일의 추가, 삭제, 변경된 경우
@@ -50,7 +50,7 @@ public class BoardServiceImpl implements BoardService{
 			}
 		}
 		
-		//BoardDTO board = null;
+		//PostDTO board = null;
 		//System.out.println("타이틀 : "+board.getTitle());	//null exception이 발생한다. 
 		//트랜잭션이 없었다면 게시글 등록은 되고 에러가 난다.
 		//트랜잭션이 있다면 게시글 등록되었던것을 롤백하고 에러가 난다.
@@ -59,17 +59,17 @@ public class BoardServiceImpl implements BoardService{
 	}
 	
 	@Override
-	public boolean registerBoard(BoardDTO params, MultipartFile[] files) {
+	public boolean registerPost(PostDTO params, MultipartFile[] files) {
 		int queryResult = 1;
 
-		if (registerBoard(params) == false) {
+		if (registerPost(params) == false) {
 			return false;
 		}
 
 		/*
 		기존에 게시글을 썼을때는 게시글번호는 insert시점에 자동increse 했다.
 		그런데 이제 파일을 첨부시킬때는 그 파일이 어느게시글에 달렸는지를 db에 쓰기 이전에 알아야 하기 때문에
-		BoardMapper.xml에서 useGeneratedKeys="true" keyProperty="idx" 해준다.
+		PostMapper.xml에서 useGeneratedKeys="true" keyProperty="idx" 해준다.
 		*/
 		List<AttachDTO> fileList = fileUtils.uploadFiles(files, params.getIdx());
 		
@@ -84,30 +84,30 @@ public class BoardServiceImpl implements BoardService{
 	}
 
 	@Override
-	public BoardDTO getBoardDetail(Long idx) {
-		return boardMapper.selectBoardDetail(idx);
+	public PostDTO getPostDetail(Long idx) {
+		return boardMapper.selectPostDetail(idx);
 	}
 
 	@Override
-	public boolean deleteBoard(Long idx) {
+	public boolean deletePost(Long idx) {
 		int queryResult = 0;
 
-		BoardDTO board = boardMapper.selectBoardDetail(idx);
+		PostDTO board = boardMapper.selectPostDetail(idx);
 
 		//지워진상태가 아니고 비어있지 않으면 지우기
 		if (board != null && "N".equals(board.getDeleteYn())) {
-			queryResult = boardMapper.deleteBoard(idx);
+			queryResult = boardMapper.deletePost(idx);
 		}
 
 		return (queryResult == 1) ? true : false;
 	}
 
 	@Override
-	public List<BoardDTO> getBoardList(BoardDTO params) {
-		List<BoardDTO> boardList = Collections.emptyList();
+	public List<PostDTO> getPostList(PostDTO params) {
+		List<PostDTO> boardList = Collections.emptyList();
 
 		//전체 글의 갯수 읽기
-		int boardTotalCount = boardMapper.selectBoardTotalCount(params);
+		int boardTotalCount = boardMapper.selectPostTotalCount(params);
 		
 		PaginationInfo paginationInfo = new PaginationInfo(params);
 		paginationInfo.setTotalRecordCount(boardTotalCount);//페이지네이션에 전체글갯수 세팅
@@ -117,7 +117,7 @@ public class BoardServiceImpl implements BoardService{
 		
 		//토탈카운트가 0개 이상일경우만 리스트 갖고오기. 아니면 비어있는 리스트 반환
 		if (boardTotalCount > 0) {
-			boardList = boardMapper.selectBoardList(params);
+			boardList = boardMapper.selectPostList(params);
 		}
 
 		return boardList;

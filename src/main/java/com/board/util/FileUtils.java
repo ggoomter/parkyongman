@@ -37,10 +37,10 @@ public class FileUtils {
 	/**
 	 * 서버에 첨부 파일을 생성하고, 업로드 파일 목록 반환
 	 * @param files    - 파일 Array
-	 * @param boardIdx - 게시글 번호
+	 * @param postIdx - 게시글 번호
 	 * @return 업로드 파일 목록
 	 */
-	public List<AttachDTO> uploadFiles(MultipartFile[] files, Long boardIdx) {
+	public List<AttachDTO> uploadFiles(MultipartFile[] files, Long postIdx) {
 
 		/* 업로드 파일 정보를 담을 비어있는 리스트 */
 		List<AttachDTO> attachList = new ArrayList<>();
@@ -69,7 +69,7 @@ public class FileUtils {
 
 				/* 파일 정보 저장 */
 				AttachDTO attach = new AttachDTO();
-				attach.setBoardIdx(boardIdx);
+				attach.setPostIdx(postIdx);
 				attach.setOriginalName(file.getOriginalFilename());
 				attach.setSaveName(saveName);
 				attach.setSize(file.getSize());

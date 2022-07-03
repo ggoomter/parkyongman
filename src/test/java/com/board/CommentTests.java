@@ -23,7 +23,7 @@ class CommentTests {
 
 		for (int i = 1; i <= number; i++) {
 			CommentDTO params = new CommentDTO();
-			params.setBoardIdx((long) 450); // 댓글을 추가할 게시글 번호
+			params.setPostIdx((long) 450); // 댓글을 추가할 게시글 번호
 			params.setContent(i + "번 댓글을 추가합니다!");
 			params.setWriter(i + "번 회원");
 			commentService.registerComment(params);
@@ -42,7 +42,7 @@ class CommentTests {
 	@Test
 	public void getCommentList() {
 		CommentDTO params = new CommentDTO();
-		params.setBoardIdx((long) 450); // 댓글을 추가할 게시글 번호
+		params.setPostIdx((long) 450); // 댓글을 추가할 게시글 번호
 
 		commentService.getCommentList(params);
 	}
