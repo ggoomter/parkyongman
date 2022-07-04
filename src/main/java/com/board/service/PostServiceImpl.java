@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.board.domain.AttachDTO;
 import com.board.domain.PostDTO;
 import com.board.mapper.AttachMapper;
+import com.board.mapper.BoardMapper;
 import com.board.mapper.PostMapper;
 import com.board.paging.PaginationInfo;
 import com.board.util.FileUtils;
@@ -19,7 +20,10 @@ import com.board.util.FileUtils;
 public class PostServiceImpl implements PostService{
 
 	@Autowired
-	private PostMapper boardMapper;
+	private PostMapper postMapper;
+	
+	@Autowired
+	private BoardMapper boardMapper;
 	
 	@Autowired
 	private AttachMapper attachMapper;
@@ -33,10 +37,10 @@ public class PostServiceImpl implements PostService{
 		int queryResult = 0;
 
 		if (params.getIdx() == null) {	//idx가 없으면 입력
-			queryResult = boardMapper.insertPost(params);
+			queryResult = postMapper.insertPost(params);
 			
 		} else {		//idx가 있으면 수정
-			queryResult = boardMapper.updatePost(params);
+			queryResult = postMapper.updatePost(params);
 			
 			// 수정화면에서 찾아보기로 파일을 수정하면 기존의 파일은 삭제처리해야된다.
 			if ("Y".equals(params.getChangeYn())) {	// 수정할때 화면에서 파일의 추가, 삭제, 변경된 경우
@@ -85,42 +89,44 @@ public class PostServiceImpl implements PostService{
 
 	@Override
 	public PostDTO getPostDetail(Long idx) {
-		return boardMapper.selectPostDetail(idx);
+		return postMapper.selectPostDetail(idx);
 	}
 
 	@Override
 	public boolean deletePost(Long idx) {
 		int queryResult = 0;
 
-		PostDTO board = boardMapper.selectPostDetail(idx);
+		PostDTO board = postMapper.selectPostDetail(idx);
 
 		//지워진상태가 아니고 비어있지 않으면 지우기
 		if (board != null && "N".equals(board.getDeleteYn())) {
-			queryResult = boardMapper.deletePost(idx);
+			queryResult = postMapper.deletePost(idx);
 		}
 
 		return (queryResult == 1) ? true : false;
 	}
 
 	@Override
-	public List<PostDTO> getPostList(PostDTO params) {
-		List<PostDTO> boardList = Collections.emptyList();
-
-		//전체 글의 갯수 읽기
-		int boardTotalCount = boardMapper.selectPostTotalCount(params);
+	public List<PostDTO> getPostList(String category, PostDTO params) {
+		System.out.println("서비스임플의 getPostList");
+		List<PostDTO> postList = Collections.emptyList();
+		int boardIdx = boardMapper.getBoardIdx(category);
+		params.setBoardIdx((long) boardIdx);
+		//전체 글의 갯수 읽기 
+		int postTotalCount = postMapper.selectPostTotalCount(params);
 		
 		PaginationInfo paginationInfo = new PaginationInfo(params);
-		paginationInfo.setTotalRecordCount(boardTotalCount);//페이지네이션에 전체글갯수 세팅
+		paginationInfo.setTotalRecordCount(postTotalCount);  //페이지네이션에 전체글갯수 세팅
 
 		params.setPaginationInfo(paginationInfo);
 		
 		
 		//토탈카운트가 0개 이상일경우만 리스트 갖고오기. 아니면 비어있는 리스트 반환
-		if (boardTotalCount > 0) {
-			boardList = boardMapper.selectPostList(params);
+		if (postTotalCount > 0) {
+			postList = postMapper.selectPostList(params);
 		}
 
-		return boardList;
+		return postList;
 	}
 	
 	@Override

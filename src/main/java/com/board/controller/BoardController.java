@@ -17,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.board.constant.Method;
 import com.board.domain.AttachDTO;
 import com.board.domain.PostDTO;
+import com.board.domain.BoardDTO;
 import com.board.service.PostService;
 import com.board.util.UiUtils;
 /* 보드. 게시판
@@ -74,11 +76,11 @@ public class BoardController extends UiUtils{
 	}
 	
 	//@ModelAttribute를 이용하면 파라미터로 전달받은 객체를 자동으로 뷰까지 전달할 수 있다.
-	@GetMapping(value = "/post/list.do")
-	public String openPostList(@ModelAttribute("params") PostDTO params, Model model) {
-		List<PostDTO> postList = boardService.getPostList(params);
+	@GetMapping(value = "/board/{category}/list.do")
+	public String openPostList(@ModelAttribute("params") PostDTO postdto, Model model, @PathVariable String category) {
+		System.out.println("컨트롤러의 openPostList");
+		List<PostDTO> postList = boardService.getPostList(category, postdto);
 		model.addAttribute("postList", postList);
-
 		return "post/list";
 	}
 	

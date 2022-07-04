@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.util.CollectionUtils;
 
 import com.board.domain.PostDTO;
+import com.board.mapper.BoardMapper;
 import com.board.mapper.PostMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,12 +20,15 @@ public class MapperTests {
 	@Autowired
 	private PostMapper postMapper;
 	
+	@Autowired
+	private BoardMapper boardMapper;
+	
 	@Test
 	public void testOfInsert() {
 		//1. 데이터 준비
 		PostDTO params = new PostDTO();
 		params.setIdx((long)1);
-		params.setBoardIdx(1);	//게시판선택
+		params.setBoardIdx((long)1);	//게시판선택
 		params.setTitle("1번 게시글 제목");
 		params.setContent("1번 게시글 내용");
 		params.setNoticeYn("N");
@@ -126,6 +130,11 @@ public class MapperTests {
 //				}
 //			}
 //		}
+	}
+	
+	@Test
+	public void testBoardIdx() {
+		boardMapper.getBoardIdx("free");
 	}
 	
 }

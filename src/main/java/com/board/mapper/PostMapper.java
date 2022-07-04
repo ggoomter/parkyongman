@@ -5,7 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.board.domain.PostDTO;
-import com.board.paging.Criteria;
+import com.board.domain.BoardDTO;
 
 @Mapper
 public interface PostMapper {
@@ -18,7 +18,7 @@ public interface PostMapper {
 
 	public int deletePost(Long idx);
 
-	public List<PostDTO> selectPostList(PostDTO params);
+	public List<PostDTO> selectPostList(PostDTO boarddto);
 
-	public int selectPostTotalCount(PostDTO params);
+	public int selectPostTotalCount(PostDTO boarddto);
 }

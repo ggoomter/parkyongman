@@ -6,6 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.board.domain.AttachDTO;
 import com.board.domain.PostDTO;
+import com.board.domain.BoardDTO;
 
 public interface PostService {
 	
@@ -17,7 +18,7 @@ public interface PostService {
 
 	public boolean deletePost(Long idx);
 
-	public List<PostDTO> getPostList(PostDTO params);
+	public List<PostDTO> getPostList(String category, PostDTO postdto);
 	
 	public List<AttachDTO> getAttachFileList(Long boardIdx);
 	

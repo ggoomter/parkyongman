@@ -11,7 +11,7 @@ public class PostDTO extends CommonDTO{
 	private Long idx;
 	
 	/** 게시판카테고리 */
-	private int boardIdx;
+	private Long boardIdx;
 
 	/** 제목 */
 	private String title;

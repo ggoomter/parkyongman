@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.board.mapper.PostMapper">
+<mapper namespace="com.board.mapper.BoardMapper">
 
 <sql id="postColumns">
 		  idx
@@ -17,8 +17,8 @@
 		, delete_time
 	</sql>
 
-	<insert id="insertPost" parameterType="PostDTO" useGeneratedKeys="true" keyProperty="idx">
-		INSERT INTO tb_post (
+	<insert id="insertBoard" parameterType="BoardDTO" useGeneratedKeys="true" keyProperty="idx">
+		INSERT INTO tb_board (
 			<include refid="postColumns" />
 		) VALUES (
 			  #{idx}
@@ -36,19 +36,19 @@
 		)
 	</insert>
 
-	<select id="selectPostDetail" parameterType="long" resultType="PostDTO">
+	<select id="selectBoardDetail" parameterType="long" resultType="BoardDTO">
 		SELECT
 			<include refid="postColumns" />
 		FROM
-			tb_post
+			tb_board
 		WHERE
 			delete_yn = 'N'
 		AND
 			idx = #{idx}
 	</select>
 
-	<update id="updatePost" parameterType="PostDTO">
-		UPDATE tb_post
+	<update id="updateBoard" parameterType="BoardDTO">
+		UPDATE tb_board
 		SET
 			  update_time = NOW()
 			, title = #{title}
@@ -60,8 +60,8 @@
 			idx = #{idx}
 	</update>
 
-	<update id="deletePost" parameterType="long">
-		UPDATE tb_post
+	<update id="deleteBoard" parameterType="long">
+		UPDATE tb_board
 		SET
 			  delete_yn = 'Y'
 			, delete_time = NOW()
@@ -69,14 +69,13 @@
 			idx = #{idx}
 	</update>
 
-	<select id="selectPostList" parameterType="PostDTO" resultType="PostDTO">
+	<select id="selectBoardList" parameterType="BoardDTO" resultType="BoardDTO">
 		SELECT
 			<include refid="postColumns" />
 		FROM
-			tb_post
+			tb_board
 		WHERE
 			delete_yn = 'N'
-		and board_idx = #{boardIdx}
 			<include refid="CommonMapper.search" />
 		ORDER BY
 			notice_yn ASC,
@@ -85,15 +84,13 @@
 		<include refid="CommonMapper.paging" />
 	</select>
 
-	<select id="selectPostTotalCount" parameterType="PostDTO" resultType="int">
+	<select id="getBoardIdx" parameterType="String" resultType="int">
 		SELECT
-			COUNT(*)
+			idx
 		FROM
-			tb_post
+			tb_board
 		WHERE
-			delete_yn = 'N'
-	    and board_idx = #{boardIdx}
-			<include refid="CommonMapper.search" />
+	    	name = #{name}
 	</select>
 
 </mapper>
