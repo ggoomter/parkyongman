@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="board/layout/basic">
 	<th:block layout:fragment="title">
-		<title>The page is a write page</title>
+		<title>글쓰기</title>
 	</th:block>
 
 	<th:block layout:fragment="content">
@@ -45,6 +45,8 @@
 					<label for="content" class="col-sm-2 control-label">내용</label>
 					<div class="col-sm-10">
 						<textarea th:field="*{content}" class="form-control" placeholder="내용을 입력해 주세요."></textarea>
+						<!-- 서머노트사용시 -->
+						<!-- <texarea id="summernote"  th:field="*{content}" class="form-control" placeholder="내용을 입력해 주세요."></div> -->
 					</div>
 				</div>
 				
@@ -100,7 +102,42 @@
 	<th:block layout:fragment="script">
 		<script th:inline="javascript">
 			/*<![CDATA[*/
+			
+			/* dom 로드하자마자 서머노트 실행 */
+/* 			$(document).ready(function() {
+			    $('#summernote').summernote({
+			    	height : 130,
+			    	minHeight: null,  
+		    	    maxHeight: null,   
+		    	    spellCheck: false,
+			    	focus: false,       // 에디터 로딩후 포커스를 맞출지 여부
+			    	callbacks: {
+			    		onImageUpload: function(files, editor, welEditable) {
+				              for (let i = files.length - 1; i >= 0; i--) {
+				                  sendFile(files[i], this);
+				              } 
+			        	}
+			    	}
+			    });
+			}); */
 
+			/* 서머노트의 이미지업로드 */
+			function uploadSummernoteImageFile(file, el) {
+				data = new FormData();
+				data.append("file", file);
+				$.ajax({
+					data : data,
+					type : "POST",
+					url : "uploadSummernoteImageFile",
+					contentType : false,
+					enctype : 'multipart/form-data',
+					processData : false,
+					success : function(data) {
+						$(el).summernote('editor.insertImage', data.url);
+					}
+				});
+			}
+			
 			function registerBoard(form) {
 
 				form.noticeYn.value = form.noticeYn.checked == false ? 'N' : 'Y';

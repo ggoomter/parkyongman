@@ -41,14 +41,16 @@ public class BoardController extends UiUtils{
 	
 	@GetMapping(value = "/post/write.do")
 	public String openPostWrite(@ModelAttribute("params") PostDTO params, @RequestParam(value = "idx", required = false) Long idx, Model model) {
-		if (idx == null) {
+		if (idx == null) {	//idx가 없으면 글쓰기
+			System.out.println("컨트롤러에서 파악한 현재 카테고리 : "+model.getAttribute("category"));
 			model.addAttribute("post", new PostDTO());
-		} else {
+		} else {		//idx가 있으면 수정
 			PostDTO post = boardService.getPostDetail(idx);
 			if (post == null || "Y".equals(post.getDeleteYn())) {
 				return showMessageWithRedirect("없는 게시글이거나 이미 삭제된 게시글입니다.", "/post/list.do", Method.GET, null, model);
 			}
 			model.addAttribute("post", post);
+			
 			
 			List<AttachDTO> fileList = boardService.getAttachFileList(idx);
 			model.addAttribute("fileList", fileList);
@@ -59,6 +61,9 @@ public class BoardController extends UiUtils{
 	
 	@PostMapping(value = "/post/register.do")
 	public String registerPost(@ModelAttribute("params") final PostDTO params,  final MultipartFile[] files, Model model) {
+		String category = (String)model.getAttribute("category");
+		System.out.println("post 글쓰기 컨트롤러에 넘어온 category : "+category);
+		
 		Map<String, Object> pagingParams = getPagingParams(params);
 		try {
 			boolean isRegistered = boardService.registerPost(params, files);
@@ -81,6 +86,7 @@ public class BoardController extends UiUtils{
 		System.out.println("컨트롤러의 openPostList");
 		List<PostDTO> postList = boardService.getPostList(category, postdto);
 		model.addAttribute("postList", postList);
+		model.addAttribute("category", category);
 		return "post/list";
 	}
 	
