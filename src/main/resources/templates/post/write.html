@@ -12,6 +12,9 @@
 				
 				<!--/* 파일이 변경된 경우, 해당 파라미터를 이용하여 파일 삭제 및 재등록 처리 */-->
 				<input type="hidden" th:field="*{changeYn}" value="N" />
+				
+				<!-- 게시판번호(카테고리) -->
+				<input type="hidden" th:field="*{category}" value="free" />
 
 				<div class="form-group">
 					<label for="noticeYn" class="col-sm-2 control-label">공지글 설정</label>
@@ -104,7 +107,8 @@
 			/*<![CDATA[*/
 			
 			/* dom 로드하자마자 서머노트 실행 */
-/* 			$(document).ready(function() {
+ 			$(document).ready(function() {
+ 				/*
 			    $('#summernote').summernote({
 			    	height : 130,
 			    	minHeight: null,  
@@ -119,10 +123,11 @@
 			        	}
 			    	}
 			    });
-			}); */
+ 				*/
+			}); 
 
 			/* 서머노트의 이미지업로드 */
-			function uploadSummernoteImageFile(file, el) {
+/* 			function uploadSummernoteImageFile(file, el) {
 				data = new FormData();
 				data.append("file", file);
 				$.ajax({
@@ -136,7 +141,7 @@
 						$(el).summernote('editor.insertImage', data.url);
 					}
 				});
-			}
+			} */
 			
 			function registerBoard(form) {
 

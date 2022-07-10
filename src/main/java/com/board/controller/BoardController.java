@@ -42,8 +42,13 @@ public class BoardController extends UiUtils{
 	@GetMapping(value = "/post/write.do")
 	public String openPostWrite(@ModelAttribute("params") PostDTO params, @RequestParam(value = "idx", required = false) Long idx, Model model) {
 		if (idx == null) {	//idx가 없으면 글쓰기
-			System.out.println("컨트롤러에서 파악한 현재 카테고리 : "+model.getAttribute("category"));
-			model.addAttribute("post", new PostDTO());
+			String category = params.getCategory();
+			System.out.println("글쓰기 화면으로 이동하기전 파악하고있는 카테고리 : "+category);
+			
+			PostDTO newPost = new PostDTO();
+			newPost.setCategory(category);
+			model.addAttribute("post", newPost);
+
 		} else {		//idx가 있으면 수정
 			PostDTO post = boardService.getPostDetail(idx);
 			if (post == null || "Y".equals(post.getDeleteYn())) {
@@ -61,23 +66,23 @@ public class BoardController extends UiUtils{
 	
 	@PostMapping(value = "/post/register.do")
 	public String registerPost(@ModelAttribute("params") final PostDTO params,  final MultipartFile[] files, Model model) {
-		String category = (String)model.getAttribute("category");
+		String category = params.getCategory();
 		System.out.println("post 글쓰기 컨트롤러에 넘어온 category : "+category);
-		
+		String returnURL = "/board/"+category+"/list.do";
 		Map<String, Object> pagingParams = getPagingParams(params);
 		try {
 			boolean isRegistered = boardService.registerPost(params, files);
 			if (isRegistered == false) {
-				return showMessageWithRedirect("게시글 등록(수정)에 실패하였습니다.", "/post/list.do", Method.GET, pagingParams, model);
+				return showMessageWithRedirect("게시글 등록(수정)에 실패하였습니다.", returnURL, Method.GET, pagingParams, model);
 			}
 		} catch (DataAccessException e) {
-			return showMessageWithRedirect("데이터베이스 처리 과정에 문제가 발생하였습니다.", "/post/list.do", Method.GET, pagingParams, model);
+			return showMessageWithRedirect("데이터베이스 처리 과정에 문제가 발생하였습니다.", returnURL, Method.GET, pagingParams, model);
 
 		} catch (Exception e) {
-			return showMessageWithRedirect("시스템에 문제가 발생하였습니다.", "/post/list.do", Method.GET, pagingParams, model);
+			return showMessageWithRedirect("시스템에 문제가 발생하였습니다.", returnURL, Method.GET, pagingParams, model);
 		}
 
-		return showMessageWithRedirect("게시글 등록(수정)이 완료되었습니다.", "/post/list.do", Method.GET, pagingParams, model);
+		return showMessageWithRedirect("게시글 등록(수정)이 완료되었습니다.", returnURL, Method.GET, pagingParams, model);
 	}
 	
 	//@ModelAttribute를 이용하면 파라미터로 전달받은 객체를 자동으로 뷰까지 전달할 수 있다.
@@ -86,7 +91,6 @@ public class BoardController extends UiUtils{
 		System.out.println("컨트롤러의 openPostList");
 		List<PostDTO> postList = boardService.getPostList(category, postdto);
 		model.addAttribute("postList", postList);
-		model.addAttribute("category", category);
 		return "post/list";
 	}
 	

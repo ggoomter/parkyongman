@@ -35,6 +35,9 @@ public class PostServiceImpl implements PostService{
 	@Override
 	public boolean registerPost(PostDTO params) {
 		int queryResult = 0;
+		int boardIdx = boardMapper.getBoardIdx(params.getCategory());
+		params.setBoardIdx((long)boardIdx);
+		
 
 		if (params.getIdx() == null) {	//idx가 없으면 입력
 			queryResult = postMapper.insertPost(params);

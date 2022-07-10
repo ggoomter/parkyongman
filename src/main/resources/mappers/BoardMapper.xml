@@ -84,7 +84,7 @@
 		<include refid="CommonMapper.paging" />
 	</select>
 
-	<select id="getBoardIdx" parameterType="String" resultType="int">
+	<select id="getBoardIdx" parameterType="String" resultType="_int">
 		SELECT
 			idx
 		FROM
