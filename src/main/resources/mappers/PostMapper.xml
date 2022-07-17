@@ -37,14 +37,28 @@
 	</insert>
 
 	<select id="selectPostDetail" parameterType="long" resultType="PostDTO">
-		SELECT
-			<include refid="postColumns" />
-		FROM
-			tb_post
-		WHERE
-			delete_yn = 'N'
-		AND
-			idx = #{idx}
+	   SELECT
+          post.idx
+        , post.board_idx
+        , board.name as category 
+        , post.title
+        , post.content
+        , post.view_cnt
+        , post.notice_yn
+        , post.secret_yn
+        , post.delete_yn
+        , post.writer
+        , post.insert_time
+        , post.update_time
+        , post.delete_time
+        FROM
+            tb_post post
+        join tb_board board
+          on post.board_idx= board.idx 
+        WHERE
+            delete_yn = 'N'
+        AND
+            post.idx = #{idx};
 	</select>
 
 	<update id="updatePost" parameterType="PostDTO">

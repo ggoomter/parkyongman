@@ -26,7 +26,7 @@
 						<td scope="row" th:text="${#strings.equals( row.noticeYn, 'Y' ) ? '공지' : row.idx}"></td>
 						<td class="text-left">
 							<!-- <a th:href="@{/board/view.do( idx=${row.idx} )}" th:text="${row.title}"></a> -->
-							<a th:href="|@{/post/view.do}${params.makeQueryString(params.currentPageNo)}&idx=${row.idx}|" th:text="${row.title}"></a>
+							<a th:href="|@{/post/view.do}${params.makeQueryString(params.currentPageNo)}&idx=${row.idx}&boardIdx=${row.boardIdx}|" th:text="${row.title}"></a>
 						</td>
 						<td th:text="${row.writer}"></td>
 						<td th:text="${#temporals.format( row.insertTime, 'yyyy-MM-dd' )}"></td>

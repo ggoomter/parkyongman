@@ -111,12 +111,17 @@ public class PostServiceImpl implements PostService{
 
 	@Override
 	public List<PostDTO> getPostList(PostDTO params) {
-		System.out.println("서비스임플의 getPostList");
 		List<PostDTO> postList = Collections.emptyList();
-		Integer boardIdx = boardMapper.getBoardIdx(params.getCategory());	//카테고리 String으로 카테고리 pk 숫자 얻어오기
-		//int로 하면 attempted to return null from a method with a primitive return type (int). 에러
-		System.out.println("가져올 글의 갯수 : "+boardIdx);
-		params.setBoardIdx((long) boardIdx);
+		Integer boardIdx = 1;
+		
+		//String 카테고리가 null이면
+		if(params.getCategory()==null || params.getCategory().equals("")) {
+			params.setBoardIdx((long)1);
+		}else {
+			boardIdx = boardMapper.getBoardIdx(params.getCategory());	//카테고리 String으로 게시판번호 얻어오기
+			params.setBoardIdx((long) boardIdx);
+		}
+		
 		//전체 글의 갯수 읽기 
 		int postTotalCount = postMapper.selectPostTotalCount(params);
 		

@@ -88,20 +88,23 @@ public class BoardController extends UiUtils{
 	//@ModelAttribute를 이용하면 파라미터로 전달받은 객체를 자동으로 뷰까지 전달할 수 있다. params라는 이름으로 화면에 넘겼다.
 	@GetMapping(value = "/board/list/{category}")
 	public String openPostList(@ModelAttribute("params") PostDTO postdto, Model model, @PathVariable String category) {
-		System.out.println("컨트롤러의 openPostList. 컨트롤러가 파악한 카테고리 : "+category);
+		//System.out.println("컨트롤러의 openPostList. 컨트롤러가 파악한 카테고리 문자열: "+category);
 		postdto.setCategory(category);
 		List<PostDTO> postList = boardService.getPostList(postdto);
 		model.addAttribute("postList", postList);
 		return "post/list";
 	}
+
 	
 	@GetMapping(value = "/post/view.do")
-	public String openPostDetail(@ModelAttribute("params") PostDTO params, @RequestParam(value = "idx", required = false) Long idx, Model model) {
+	public String openPostDetail(@ModelAttribute("params") PostDTO params, @RequestParam(value = "idx", required = false) Long idx,  Model model) {
 		if (idx == null) {
-			return showMessageWithRedirect("올바르지 않은 접근입니다.", "/post/list", Method.GET, null, model);
+			return showMessageWithRedirect("올바르지 않은 접근입니다.", "/post/list/free", Method.GET, null, model);
 		}
 
 		PostDTO post = boardService.getPostDetail(idx);
+		System.out.println("컨트롤러에서 상세글 가져온것 : "+post);
+
 		if (post == null || "Y".equals(post.getDeleteYn())) {
 			return showMessageWithRedirect("없는 게시글이거나 이미 삭제된 게시글입니다.", "/post/list", Method.GET, null, model);
 		}

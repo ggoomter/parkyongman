@@ -56,9 +56,10 @@
 			</form>
 			
 			<!-- 트랜잭션 처리 후 페이징 정보 저장하도록 변경 -->
+			<div th:text="${post.category}">포스트의 카테고리</div>
 			<div class="btn_wrap text-center" th:object="${params}">
-				<a th:href="|@{/post/list}*{makeQueryString(currentPageNo)}|" class="btn btn-default waves-effect waves-light">뒤로가기</a>
-				<a th:href="|@{/post/write.do}*{makeQueryString(currentPageNo)}&idx=${post.idx}|" class="btn btn-primary waves-effect waves-light">수정하기</a>
+				<a th:href="|@{/board/list/${post.category}}*{makeQueryString(currentPageNo)}|" class="btn btn-default waves-effect waves-light">뒤로가기1</a>
+				<a th:href="|@{/board/write.do}*{makeQueryString(currentPageNo)}&idx=${post.idx}|" class="btn btn-primary waves-effect waves-light">수정하기</a>
 				<button type="button" class="btn btn-danger waves-effect waves-light" th:onclick="deleteBoard([[ ${post.idx} ]], [[ *{makeQueryString(currentPageNo)} ]])">삭제하기</button>
 			</div>
 		</div>
@@ -187,7 +188,7 @@
 				var writer = document.getElementById("modalWriter");
 				var content = document.getElementById("modalContent");
 
-				var uri = [[ @{/comments/} ]] + idx;
+				var uri = /*[[ @{/comments/} ]]*/ + idx;
 				var headers = {"Content-Type": "application/json", "X-HTTP-Method-Override": "PATCH"};
 				var params = {"idx": idx, "writer": writer.value, "content": content.value};
 
@@ -281,7 +282,7 @@
 					return false;
 				}
 			
-				var uri = [[ @{/comments/} ]] + idx;
+				var uri = /*[[ @{/comments/} ]]*/ + idx;
 				var headers = {"Content-Type": "application/json", "X-HTTP-Method-Override": "DELETE"};
 			
 				$.ajax({
