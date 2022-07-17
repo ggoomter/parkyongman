@@ -39,8 +39,7 @@
 			</table>
 
 			<div class="btn_wrap text-right">
-				<a th:href="@{/post/write.do(category=${category})}" class="btn btn-primary waves-effect waves-light">글쓰기</a>
-				
+				<a th:href="@{/post/write.do(category=${params.category})}" class="btn btn-primary waves-effect waves-light">글쓰기</a>
 			</div>
 
 			<th:block layout:fragment="paging">

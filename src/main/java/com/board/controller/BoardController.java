@@ -41,9 +41,8 @@ public class BoardController extends UiUtils{
 	private PostService boardService;
 	
 	@GetMapping(value = "/post/write.do")
-	public String openPostWrite(@ModelAttribute("params") PostDTO params, @RequestParam(value = "idx", required = false) Long idx, Model model) {
+	public String openPostWrite(@ModelAttribute("params") PostDTO params, @RequestParam(value = "idx", required = false) Long idx, Model model, @RequestParam String category) {
 		if (idx == null) {	//idx가 없으면 글쓰기
-			String category = params.getCategory();
 			System.out.println("글쓰기 화면으로 이동하기전 파악하고있는 카테고리 : "+category);
 			
 			PostDTO newPost = new PostDTO();
@@ -69,8 +68,9 @@ public class BoardController extends UiUtils{
 	public String registerPost(@ModelAttribute("params") final PostDTO params,  final MultipartFile[] files, Model model) {
 		String category = params.getCategory();
 		System.out.println("post 글쓰기 컨트롤러에 넘어온 category : "+category);
-		String returnURL = "/board/"+category+"/list";
+		String returnURL = "/board/list";
 		Map<String, Object> pagingParams = getPagingParams(params);
+		pagingParams.put("category", category);
 		try {
 			boolean isRegistered = boardService.registerPost(params, files);
 			if (isRegistered == false) {
@@ -119,25 +119,28 @@ public class BoardController extends UiUtils{
 	
 	@PostMapping(value = "/post/delete.do")
 	public String deletePost(@ModelAttribute("params") PostDTO params, @RequestParam(value = "idx", required = false) Long idx, Model model) {
+		String category = params.getCategory();
+		System.out.println("삭제한 카테고리 : "+category);
 		if (idx == null) {
 			return showMessageWithRedirect("올바르지 않은 접근입니다.", "/post/list", Method.GET, null, model);
 		}
 
 		Map<String, Object> pagingParams = getPagingParams(params);
+		pagingParams.put("category", category);
 
 		try {
 			boolean isDeleted = boardService.deletePost(idx);
 			if (isDeleted == false) {
-				return showMessageWithRedirect("게시글 삭제에 실패하였습니다.", "/post/list", Method.GET, pagingParams, model);
+				return showMessageWithRedirect("게시글 삭제에 실패하였습니다.", "/board/list", Method.GET, pagingParams, model);
 			}
 		} catch (DataAccessException e) {
-			return showMessageWithRedirect("데이터베이스 처리 과정에 문제가 발생하였습니다.", "/post/list", Method.GET, pagingParams, model);
+			return showMessageWithRedirect("데이터베이스 처리 과정에 문제가 발생하였습니다.", "board/list", Method.GET, pagingParams, model);
 
 		} catch (Exception e) {
-			return showMessageWithRedirect("시스템에 문제가 발생하였습니다.", "/post/list", Method.GET, pagingParams, model);
+			return showMessageWithRedirect("시스템에 문제가 발생하였습니다.", "/board/list", Method.GET, pagingParams, model);
 		}
 
-		return showMessageWithRedirect("게시글 삭제가 완료되었습니다.", "/post/list", Method.GET, pagingParams, model);
+		return showMessageWithRedirect("게시글 삭제가 완료되었습니다.", "/board/list", Method.GET, pagingParams, model);
 	}
 	
 	@GetMapping("/post/download.do")
