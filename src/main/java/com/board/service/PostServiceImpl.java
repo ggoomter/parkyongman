@@ -35,7 +35,7 @@ public class PostServiceImpl implements PostService{
 	@Override
 	public boolean registerPost(PostDTO params) {
 		int queryResult = 0;
-		int boardIdx = boardMapper.getBoardIdx(params.getCategory());
+		Integer boardIdx = boardMapper.getBoardIdx(params.getCategory());
 		params.setBoardIdx((long)boardIdx);
 		
 
@@ -110,10 +110,12 @@ public class PostServiceImpl implements PostService{
 	}
 
 	@Override
-	public List<PostDTO> getPostList(String category, PostDTO params) {
+	public List<PostDTO> getPostList(PostDTO params) {
 		System.out.println("서비스임플의 getPostList");
 		List<PostDTO> postList = Collections.emptyList();
-		int boardIdx = boardMapper.getBoardIdx(category);
+		Integer boardIdx = boardMapper.getBoardIdx(params.getCategory());	//카테고리 String으로 카테고리 pk 숫자 얻어오기
+		//int로 하면 attempted to return null from a method with a primitive return type (int). 에러
+		System.out.println("가져올 글의 갯수 : "+boardIdx);
 		params.setBoardIdx((long) boardIdx);
 		//전체 글의 갯수 읽기 
 		int postTotalCount = postMapper.selectPostTotalCount(params);

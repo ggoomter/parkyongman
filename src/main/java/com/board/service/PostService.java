@@ -18,7 +18,7 @@ public interface PostService {
 
 	public boolean deletePost(Long idx);
 
-	public List<PostDTO> getPostList(String category, PostDTO postdto);
+	public List<PostDTO> getPostList(PostDTO postdto);
 	
 	public List<AttachDTO> getAttachFileList(Long boardIdx);
 	

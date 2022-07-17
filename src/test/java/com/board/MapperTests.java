@@ -134,7 +134,9 @@ public class MapperTests {
 	
 	@Test
 	public void testBoardIdx() {
-		boardMapper.getBoardIdx("free");
+		Integer num =  boardMapper.getBoardIdx("free");
+		System.out.println("가져온 num : "+num);
 	}
+	
 	
 }

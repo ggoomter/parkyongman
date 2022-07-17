@@ -66,9 +66,9 @@
 						searchKeyword.focus();
 						return false;
 					}
-
-					form = document.getElementById("searchForm");
-					form.searchKeyword.value = searchKeyword.value;
+					//바깥쪽에서 키워드가 비어있지 않으면
+					form = document.getElementById("searchForm");	
+					form.searchKeyword.value = searchKeyword.value;	//바깥 인풋에서 입력한 키워드를 콤보박스의 폼의 인풋으로 넣기
 					form.submit();
 				}
 

@@ -84,13 +84,13 @@
 		<include refid="CommonMapper.paging" />
 	</select>
 
-	<select id="getBoardIdx" parameterType="String" resultType="_int">
+	<select id="getBoardIdx" parameterType="String" resultType="Integer">
 		SELECT
 			idx
 		FROM
 			tb_board
 		WHERE
-	    	name = #{name}
+	    	name = #{category}
 	</select>
 
 </mapper>
