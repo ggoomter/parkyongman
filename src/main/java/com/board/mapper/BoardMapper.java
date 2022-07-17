@@ -19,5 +19,5 @@ public interface BoardMapper {
 
 	public List<BoardDTO> selectBoardList(BoardDTO params, BoardDTO boarddto);
 
-	public int getBoardIdx(String name);
+	public Integer getBoardIdx(String name);
 }

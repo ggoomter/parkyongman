@@ -11,6 +11,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Controller;
@@ -86,9 +87,9 @@ public class BoardController extends UiUtils{
 	}
 	
 	//@ModelAttribute를 이용하면 파라미터로 전달받은 객체를 자동으로 뷰까지 전달할 수 있다. params라는 이름으로 화면에 넘겼다.
-	@GetMapping(value = "/board/list/{category}")
-	public String openPostList(@ModelAttribute("params") PostDTO postdto, Model model, @PathVariable String category) {
-		//System.out.println("컨트롤러의 openPostList. 컨트롤러가 파악한 카테고리 문자열: "+category);
+	@GetMapping(value = "/board/list")
+	public String openPostList(@ModelAttribute("params") PostDTO postdto, Model model, @RequestParam String category) {
+		System.out.println("컨트롤러의 openPostList. 컨트롤러가 파악한 카테고리 문자열: "+category);
 		postdto.setCategory(category);
 		List<PostDTO> postList = boardService.getPostList(postdto);
 		model.addAttribute("postList", postList);
