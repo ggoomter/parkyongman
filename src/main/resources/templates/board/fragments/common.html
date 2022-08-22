@@ -24,16 +24,16 @@
 
 	<!-- 서치영역 -->
 	<div th:fragment="search" id="adv-search" class="input-group">
-		<input type="text" id="mainSearchKeyword" class="form-control" th:value="${params.searchKeyword}" placeholder="키워드를 입력해 주세요." />
+		<input type="text" id="mainSearchKeyword" class="form-control" th:value="${params.searchKeyword}" placeholder="키워드를 입력해 주세요.16" />
 		<div class="input-group-btn">
-			<div class="btn-group" role="group">
-				<div class="dropdown dropdown-lg">
-					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-						<span class="caret"></span>
-					</button>
-					
+			<div class="btn-group" role="group" aria-label="Button group with nested dropdown">	<!-- 여러개의 버튼을 하나의 그룹으로 감싸기. aria-label은 보기좋게 라벨 -->
+				
+				<div class="dropdown">
+				    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+				      검색유형
+				    </button>
 					<!-- 아래화살표 드랍박스 눌렀을때 나옴 -->
-					<div class="dropdown-menu dropdown-menu-right" role="menu">
+					<div class="dropdown-menu">
 						<!--/* 검색 form */-->
 						<form id="searchForm" th:action="@{/board/list}" method="get" th:onsubmit="return searchBoard(this)" class="form-horizontal" role="form">
 							<!-- /* 현재 페이지 번호, 페이지당 출력할 데이터 개수, 페이지 하단에 출력할 페이지 개수 Hidden 파라미터 */ -->
@@ -57,10 +57,9 @@
 							<button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
 						</form>
 					</div>
-					
-				</div>
-				<button type="button" class="btn btn-primary" onclick="searchBoard(null)"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
-			</div>
+				</div>	<!-- end of .dropdown -->
+				<button type="button" class="btn btn-primary" onclick="searchBoard(null)"><span class="glyphicon glyphicon-search" aria-hidden="true">검색</span></button>
+			</div>	<!-- end of btn-group -->
 		</div>
 		
 	</div>
